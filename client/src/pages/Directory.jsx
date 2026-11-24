@@ -41,30 +41,6 @@ export default function Directory() {
     e.preventDefault();
     setError("");
     setInfo("");
-    const openSlots = async (a) => {
-      setError("");
-      setInfo("");
-      try {
-        const { data } = await api.get(`/slots/alumni/${a.id}`);
-        setSlots(data);
-        setSlotAlumni(a);
-      } catch (err) {
-        setError("Could not load slots");
-      }
-    };
-
-    const bookSlot = async (slotId) => {
-      try {
-        await api.post(`/slots/${slotId}/book`);
-        setInfo(
-          `Call booked with ${slotAlumni.name} ✅ Calls page-la paarunga`,
-        );
-      } catch (err) {
-        setError(err.response?.data?.error || "Booking failed");
-      }
-      setSlotAlumni(null);
-    };
-
     try {
       await api.post("/referrals", {
         alumni_id: selected.id,
@@ -78,6 +54,28 @@ export default function Directory() {
     } catch (err) {
       setError(err.response?.data?.error || "Request failed");
     }
+  };
+
+  const openSlots = async (a) => {
+    setError("");
+    setInfo("");
+    try {
+      const { data } = await api.get(`/slots/alumni/${a.id}`);
+      setSlots(data);
+      setSlotAlumni(a);
+    } catch (err) {
+      setError("Could not load slots");
+    }
+  };
+
+  const bookSlot = async (slotId) => {
+    try {
+      await api.post(`/slots/${slotId}/book`);
+      setInfo(`Call booked with ${slotAlumni.name} ✅ Calls page-la paarunga`);
+    } catch (err) {
+      setError(err.response?.data?.error || "Booking failed");
+    }
+    setSlotAlumni(null);
   };
 
   return (
@@ -159,6 +157,7 @@ export default function Directory() {
           </form>
         </div>
       )}
+
       {slotAlumni && (
         <div className="modal-bg">
           <div className="modal">
